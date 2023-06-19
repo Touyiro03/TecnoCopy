@@ -42,4 +42,3 @@ Categoria de compra
 Categoria de alquiler
 
 
-
