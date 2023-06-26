@@ -1,29 +1,20 @@
 // mongodb.js
 
 import { MongoClient } from 'mongodb'
-
-const uri = process.env.DATABASE_URL
-const options = {
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
-}
-
-let client = new MongoClient(uri, options)
-let mongo
-
-if (!process.env.DATABASE_URL) {
-    throw new Error('Add Mongo URI to .env.local')
-}
-
+const uri = process.env.DATABASE_URL;
+var client
+var clientPromise
 if (process.env.NODE_ENV === 'development') {
+    // In development mode, use a global variable so that the value
+    // is preserved across module reloads caused by HMR (Hot Module Replacement).
     if (!global._mongoClientPromise) {
-
+        client = new MongoClient(uri)
         global._mongoClientPromise = client.connect()
     }
-    mongo = global._mongoClientPromise
+    clientPromise = global._mongoClientPromise
 } else {
-
-    mongo = client.connect()
+    // In production mode, it's best to not use a global variable.
+    client = new MongoClient(uri, options)
+    clientPromise = client.connect()
 }
-
-export default mongo
+export default clientPromise

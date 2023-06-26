@@ -11,7 +11,7 @@ const layout = (props) => {
     if (session != null) {
         return (
             <Box>
-                <Paper sx={{ bgcolor: "#f8f8f8", height: "100vh", overflowY: 'scroll'}}>
+                <Paper sx={{ bgcolor: "#f8f8f8", height: "100vh", overflowY: 'scroll' }}>
                     <Navigation />
                     {props.children}
                 </Paper>

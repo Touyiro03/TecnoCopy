@@ -1,9 +1,8 @@
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
-import { PrismaClient } from '@prisma/client';
+import conn from '@/lib/mongo'
 import compareHash from '@/lib/compareHash'
 
-const prisma = new PrismaClient({});
 
 export const authOptions = {
     // Configure one or more authentication providers
@@ -17,18 +16,21 @@ export const authOptions = {
     providers: [
         CredentialsProvider({
             async authorize(credentials, req) {
-                var user = await prisma.users.findUnique({
-                    where: { name: req.body.name }
-                });
+                const mongo = await conn;
+                const db = mongo.db();
+                var user = await db.collection('users').find({
+                    name: req.body.name
+                }).toArray();
+                user = user[0];
                 if (user != '' && user != undefined) {
                     let conf = await compareHash(req.body.password, user.password)
                     if (conf) {
-                        prisma.$disconnect();
+                        mongo.close();
                         return user;
                     }
                 }
 
-                prisma.$disconnect();
+                mongo.close();
                 throw new Error("Usuario o Contraseña Incorrectos.")
             }
         }),
