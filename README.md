@@ -25,3 +25,5 @@ Parte publica
 - Una tienda online que cuenta con todas las diferentes impresoras que maneja la empresa. Los clientes podrán visualizarlas y realizar/solicitar una compra o venta dependiendo del tipo de impresora.
 Categoria de compra
 Categoria de alquiler
+
+
