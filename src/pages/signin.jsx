@@ -16,8 +16,8 @@ import { Alert, Card, Snackbar } from '@mui/material';
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      <Link color="inherit" href="https://pcpartners.com.mx/">
-        PC Partners
+      <Link color="inherit" href="https://tecnocopy.com.mx/">
+        @TecnoCopy
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}

@@ -3,7 +3,7 @@ import { Box, Button, TextField } from "@mui/material"
 import Nomrbequequiera from "@/components/ModalPersonalizado";
 export default function Home() {
   const handleClick = () => {
-    alert("Pene");
+    alert("Alert");
   }
 
   const [edad, setEdad] = useState();

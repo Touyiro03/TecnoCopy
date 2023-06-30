@@ -7,7 +7,7 @@ import { Box } from '@mui/system'
 import { Paper } from '@mui/material'
 
 const layout = (props) => {
-    const { data: session } = useSession()
+    const { data: session } = useSession();
     if (session != null) {
         return (
             <Box>

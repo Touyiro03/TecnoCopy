@@ -44,15 +44,7 @@ export const authOptions = {
             return token
         },
         async session({ session, token }) {
-            const datos = await prisma.users.findUnique({ where: { id: parseInt(token.sub) } });
             return {
-                // datos completos/necesarios del usuario
-                id: datos.id,
-                name: datos.name,
-                email: datos.email,
-                img: datos.img,
-                pin: datos.pin,
-                // dejar los datos por defecto tambien
                 ...session,
                 ...token
             };
