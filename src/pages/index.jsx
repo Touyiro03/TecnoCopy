@@ -10,7 +10,7 @@ export default function Home() {
     <Grid
       container
       spacing={3}
-      sx={{ p: 2 }}
+      sx={{ p: 3 }}
     >
       <Grid item xs={12} lg={6}>
         <Card sx={{ boxShadow: 3, borderRadius: 3 }}>
