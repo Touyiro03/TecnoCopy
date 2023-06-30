@@ -8,6 +8,7 @@ const clientes = () => {
     const res = await fetch("/api/clientes");
     const respuesta = await res.json();
     setClientes(respuesta.data);
+    console.log(respuesta.data);
   };
   // obtener clientes al montar la pagina
   useEffect(() => {
