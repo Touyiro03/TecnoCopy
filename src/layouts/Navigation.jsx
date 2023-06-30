@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 
 
-const pages = ['clientes'];
+const pages = ['clientes', 'empleados', 'productos', 'ventas', 'rentas', 'servicios'];
 const settings = ['Opciones', 'Cerrar Sesión'];
 
 const Navigation = () => {
@@ -56,7 +56,7 @@ const Navigation = () => {
                                 aria-controls="menu-appbar"
                                 aria-haspopup="true"
                                 onClick={handleOpenNavMenu}
-                                color="black"
+                                color="white"
                             >
                                 <MenuIcon />
                             </IconButton>
@@ -103,7 +103,7 @@ const Navigation = () => {
                         {/* Links vista normal */}
                         <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                             {pages.map((page) => (
-                                <Button sx={{ color: '#fff' }}>
+                                <Button sx={{ color: '#000' }}>
                                     <Link
                                         className='nav-link'
                                         href={`/${page}`}
@@ -120,7 +120,7 @@ const Navigation = () => {
                         </Box>
 
                         {/* Avatar */}
-                        <Box sx={{ flexGrow: 0, display: 'flex', color: 'black' }}>
+                        <Box sx={{ flexGrow: 0, display: 'flex', color: '#fff' }}>
                             <Tooltip title={"Menu"}>
                                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                                     <Avatar alt={session.name} src={"/users/" + ((session.img != null || session.img != undefined) ? session.img : "")} sx={{ bgcolor: "#3bb2ed" }}>{session.name[0]}</Avatar>
@@ -175,7 +175,7 @@ const Navigation = () => {
                                 aria-controls="menu-appbar"
                                 aria-haspopup="true"
                                 onClick={handleOpenNavMenu}
-                                color="black"
+                                color="white"
                             >
                                 <MenuIcon />
                             </IconButton>
@@ -218,7 +218,7 @@ const Navigation = () => {
 
                         {/* Links vista normal */}
                         <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                            <Button sx={{ color: '#fff' }}>
+                            <Button sx={{ color: '#000' }}>
                                 <Link
                                     className='nav-link'
                                     href={`/signin`}
