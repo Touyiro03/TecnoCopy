@@ -1,8 +1,8 @@
-import { Typography } from "@mui/material";
+import { Card, CardContent, Paper, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
 
 const clientes = () => {
-  const [clientes, setClientes] = useState({});
+  const [clientes, setClientes] = useState([]);
 
   const getClientes = async () => {
     const res = await fetch("/api/clientes");
@@ -13,13 +13,19 @@ const clientes = () => {
   // obtener clientes al montar la pagina
   useEffect(() => {
     getClientes();
+
   }, []);
   return (
-    <div>
+    <Paper elevation={3} sx={{ p: 2 }}>
+
       {clientes.map((cliente) => (
-        <Typography>{cliente.name}</Typography>
+        <Card sx={{ boxShadow: 3, borderRadius: 3 }}>
+          <CardContent>
+            <Typography>{cliente.name}</Typography>
+          </CardContent>
+        </Card>
       ))}
-    </div>
+    </Paper>
   );
 };
 
