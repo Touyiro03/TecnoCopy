@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 export default function Home() {
   return (
-    <Grid
+    <Grid 
       container
       spacing={3}
       sx={{ p: 3 }}

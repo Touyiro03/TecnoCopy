@@ -1,11 +1,25 @@
-import React from 'react'
+import { Typography } from "@mui/material";
+import React, { useState } from "react";
 
 const clientes = () => {
-    return (
-        <div>
-            Clientes
-        </div>
-    )
-}
+  const [clientes, setClientes] = useState({});
 
-export default clientes
+  const getClientes = async () => {
+    const res = await fetch("/api/clientes");
+    const respuesta = await res.json();
+    setClientes(respuesta.data);
+  };
+  // obtener clientes al montar la pagina
+  useEffect(() => {
+    getClientes();
+  }, []);
+  return (
+    <div>
+      {clientes.map((cliente) => (
+        <Typography>{cliente.name}</Typography>
+      ))}
+    </div>
+  );
+};
+
+export default clientes;
