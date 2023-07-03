@@ -7,7 +7,7 @@ var clientPromise;
 //     // is preserved across module reloads caused by HMR (Hot Module Replacement).
 //     if (!global._mongoClientPromise) {
 //         client = new MongoClient(uri)
-//         glo  bal._mongoClientPromise = client.connect()
+//         global._mongoClientPromise = client.connect()
 //     }
 //     clientPromise = global._mongoClientPromise
 // } else {

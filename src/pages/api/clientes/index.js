@@ -6,12 +6,19 @@ export default async function handleClientesApi(req, res) {
   switch (req.method) {
     case "GET":
       try {
-        const clientes = await db.collection("clientes").find({}).toArray();
-        console.log(clientes);
+        let clientes;
+        // if (req.query.search) {
+        //   clientes = await db.collection("clientes").find({ "$or": [{ "name": /req.query.search/ }, { "email": /req.query.search/ }] }).toArray();
+        // } else {
+        clientes = await db.collection("clientes").find({}).toArray();
+        // }
+        conn.close();
         return res.status(200).json({ status: 'success', message: 'clientes encontrados', data: clientes });
 
       } catch (err) {
-        return res.send(err);
+        conn.
+          close();
+        return res.status(400).json({ status: 'error', message: err });
       }
   }
 }
