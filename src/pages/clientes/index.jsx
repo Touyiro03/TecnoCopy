@@ -60,7 +60,7 @@ const clientes = () => {
         <Grid item lg></Grid>
         {/* Barra de busqueda */}
         <Grid lg={4} xs={12}>
-          <Buscar resultado={resultado} setResultado={setResultado} />
+          <Buscar data={clientes} onSelect={setResultado} />
         </Grid>
       </Grid>
       <Tabla columns={columnas} data={clientes} />
