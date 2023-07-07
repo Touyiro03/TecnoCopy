@@ -7,7 +7,7 @@ import React, { useState, useEffect } from "react";
 
 const clientes = () => {
   const [clientes, setClientes] = useState([]);
-  const [abierto, setAbierto] = useState(0);
+  const [abierto, setAbierto] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [resultado, setResultado] = useState();
@@ -37,19 +37,21 @@ const clientes = () => {
     if (respuesta.status == 'success') {
       setClientes(respuesta.data);
     }
-    else {
-      alert(respuesta);
-    }
-    //console.log(respuesta.data);
   };
-  // obtener clientes al montar la pagina
+
   useEffect(() => {
     getClientes();
 
   }, []);
-  const handleChange = (panel, contacto) => (event, exp) => {
-    setAbierto(exp ? panel : false);
-  };
+
+  // al elegir un cliente en la busqueda
+  useEffect(() => {
+    if (resultado && resultado._id) {
+      setResultado(resultado);
+      console.log(resultado);
+      setOpenEdit(true);
+    }
+  }, [resultado])
 
   return (
     <Paper elevation={20} sx={{ p: 2, m: 2 }}>
@@ -64,34 +66,6 @@ const clientes = () => {
         </Grid>
       </Grid>
       <Tabla columns={columnas} data={clientes} />
-
-      {/*
-      <Grid container rowSpacing={1} columnSpacing={2}>
-        {
-          clientes.map((cliente) => (
-            <Grid item xs={12} lg={4}>
-              <Card sx={{ boxShadow: 3, borderRadius: 3, '&:hover': { bgcolor: '#f5f5f5' } }}>
-                <Accordion expanded={abierto === cliente._id} onChange={handleChange(cliente._id, cliente)}>
-                  <AccordionSummary expandIcon={<ExpandMore />} sx={{ width: '100%' }}>
-                    <AccountCircle />
-                    <Typography>{cliente.name}</Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    {cliente.email &&
-                      <Box sx={{ display: 'flex', my: 1 }} xs={12}>
-                        <Typography sx={{ mr: 2, fontWeight: 500, width: '25%' }}>Correo: </Typography>
-                        <Typography>{cliente.email ?? '—'}</Typography>
-                      </Box>
-                    }
-                    <EditDelete openEdit={setOpenEdit} openDelete={setOpenDelete} />
-                  </AccordionDetails>
-                </Accordion>
-              </Card>
-            </Grid>
-          ))
-        }
-      </Grid>
-      */}
     </Paper>
   );
 };

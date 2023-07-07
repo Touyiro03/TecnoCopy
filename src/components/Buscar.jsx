@@ -5,16 +5,17 @@ import { Autocomplete } from '@mui/material';
 
 const SearchBar = ({ data, onSelect }) => {
 
-    const handleSelect = (option) => {
-        console.log(option);
-        onSelect(option.target.value);
+    const handleSelect = (e, v) => {
+        //console.log(e, v);
+        onSelect(v);
     }
     return (
         <Autocomplete
             freeSolo
-            options={data.map((option) => option.name)}
+            options={data}
+            getOptionLabel={(option) => (option.name ?? "")}
             onChange={(obj, val) => handleSelect(obj, val)}
-            filterOptions={(x) => x}
+            // filterOptions={(x) => x}
             renderInput={(params) => (
                 <TextField
                     {...params}
@@ -26,6 +27,12 @@ const SearchBar = ({ data, onSelect }) => {
                     }}
                 />
             )}
+            renderOption={(props, opcion) => {
+                //console.log(opcion, props)
+                return (
+                    <li {...props}>{opcion.name}</li>
+                )
+            }}
         />
 
     );
