@@ -1,22 +1,20 @@
 import Buscar from "@/components/Buscar";
 import EditDelete from "@/components/EditDelete";
 import Tabla from "@/components/Tabla";
+import Cliente from "@/components/clientes/Cliente";
 import { AccountCircle, ExpandMore, Search } from "@mui/icons-material";
-import { Accordion, AccordionDetails, AccordionSummary, Autocomplete, Box, Card, CardContent, Grid, InputAdornment, Paper, TextField, Typography } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Autocomplete, Box, Card, CardContent, Grid, InputAdornment, Modal, Paper, TextField, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
 
 const clientes = () => {
   const [clientes, setClientes] = useState([]);
-  const [abierto, setAbierto] = useState(false);
-  const [openEdit, setOpenEdit] = useState(false);
-  const [openDelete, setOpenDelete] = useState(false);
-  const [resultado, setResultado] = useState();
+  const [open, setOpen] = useState(false);
+  const [resultado, setResultado] = useState('');
   const columnas = [
     {
       field: 'name', headerName: 'Nombre', width: 250, cellClassName: '', renderCell: (cell) => (
         <Box sx={{ display: 'flex' }}>
           <Typography width='80%' textAlign='center'>{cell.value}</Typography>
-
         </Box>
       )
     },
@@ -38,7 +36,7 @@ const clientes = () => {
       setClientes(respuesta.data);
     }
   };
-
+  // Obtener listado de clientes al abrir
   useEffect(() => {
     getClientes();
 
@@ -49,24 +47,49 @@ const clientes = () => {
     if (resultado && resultado._id) {
       setResultado(resultado);
       console.log(resultado);
-      setOpenEdit(true);
+      if (resultado != '') {
+        setOpen(true); // abrir modal de vista de cliente
+      }
     }
   }, [resultado])
+  const handleClose = () => {
+    setOpen(false);
+    setResultado('');
+  }
+  const ModalCliente = () => {
+    const style = {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      width: 'auto',
+    };
+    return (
+      <Modal open={open} onClose={handleClose}>
+        <Box sx={style}>
+          <Cliente cliente={resultado}/>
+        </Box>
+      </Modal>
+    )
+  }
 
   return (
-    <Paper elevation={20} sx={{ p: 2, m: 2 }}>
-      <Grid container sx={{ pb: 3 }}>
-        <Grid item lg={4}>
-          <Typography variant="h4" width={"33%"}>Clientes</Typography>
+    <Box>
+      <Paper elevation={20} sx={{ p: 2, m: 2 }}>
+        <Grid container sx={{ pb: 3 }}>
+          <Grid item lg={4}>
+            <Typography variant="h4" width={"33%"}>Clientes</Typography>
+          </Grid>
+          <Grid item lg></Grid>
+          {/* Barra de busqueda */}
+          <Grid lg={4} xs={12}>
+            <Buscar data={clientes} onSelect={setResultado} />
+          </Grid>
         </Grid>
-        <Grid item lg></Grid>
-        {/* Barra de busqueda */}
-        <Grid lg={4} xs={12}>
-          <Buscar data={clientes} onSelect={setResultado} />
-        </Grid>
-      </Grid>
-      <Tabla columns={columnas} data={clientes} />
-    </Paper>
+        <Tabla columns={columnas} data={clientes} />
+      </Paper>
+      <ModalCliente />
+    </Box>
   );
 };
 
