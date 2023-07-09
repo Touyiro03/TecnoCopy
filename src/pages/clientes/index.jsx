@@ -67,7 +67,7 @@ const clientes = () => {
     return (
       <Modal open={open} onClose={handleClose}>
         <Box sx={style}>
-          <Cliente cliente={resultado}/>
+          <Cliente cliente={resultado} refresh={getClientes} />
         </Box>
       </Modal>
     )

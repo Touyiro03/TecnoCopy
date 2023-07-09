@@ -2,18 +2,29 @@ import { formatoFecha } from '@/lib/utils/date'
 import { Box, Button, Card, CardContent, CardHeader, Divider, Grid, TextField, Tooltip, Typography } from '@mui/material'
 import React, { useState, useEffect } from 'react'
 import EditDelete from '../EditDelete'
+import { handleAlert } from '@/lib/utils/handleAlert'
 
-const Cliente = ({ cliente }) => {
+const Cliente = ({ cliente, refresh }) => {
     const [openEdit, setOpenEdit] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
-    const guardarCliente = (e) => {
+
+    const guardarCliente = async (e) => {
         e.preventDefault();
         const form = new FormData(e.currentTarget);
-        var datosNuevos = {};
+        var datosNuevos = { id: cliente._id };
         for (let key of form.keys()) {
             datosNuevos = { ...datosNuevos, [key]: form.get(key) }
         };
+
         // llamada a la api con los nuevos datos del cliente
+        const res = await fetch(`/api/clientes`, { method: 'PUT', body: JSON.stringify(datosNuevos) });
+        const resultado = await res.json();
+        if (resultado.status === 'success') {
+            refresh();
+        }
+        handleAlert(resultado.message, resultado.status);
+        setOpenEdit(false);
+
     }
     return (
         <Card>
