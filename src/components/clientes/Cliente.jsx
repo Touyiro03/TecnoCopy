@@ -2,9 +2,8 @@ import { formatoFecha } from '@/lib/utils/date'
 import { Box, Button, Card, CardContent, CardHeader, Divider, Grid, TextField, Tooltip, Typography } from '@mui/material'
 import React, { useState, useEffect } from 'react'
 import EditDelete from '../EditDelete'
-import { handleAlert } from '@/lib/utils/handleAlert'
 
-const Cliente = ({ cliente, refresh }) => {
+const Cliente = ({ cliente, refresh , handleAlert}) => {
     const [openEdit, setOpenEdit] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
 

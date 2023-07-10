@@ -1,10 +1,11 @@
 import { DataGrid } from '@mui/x-data-grid'
 import React from 'react'
 
-const Tabla = ({ columns, data }) => {
+const Tabla = ({ columns, data, onCellClick }) => {
     return (
         <div>
             <DataGrid
+                onCellClick={onCellClick}
                 columns={columns}
                 rows={data}
                 autoHeight

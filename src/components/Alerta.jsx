@@ -1,12 +1,21 @@
-import React from 'react';
-import { Alert as MuiAlert } from '@mui/material';
+import { Alert, Snackbar } from '@mui/material';
+import React from 'react'
 
-const Alert = ({ mensaje, abierto, severidad }) => {
+const Alerta = ({ open, severity, message, setOpen }) => {
     return (
-        <MuiAlert severity={severidad} variant="filled" onClose={() => { }}>
-            {mensaje}
-        </MuiAlert>
-    );
-};
+        <Snackbar
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            open={open}
+            onClose={() => {
+                setOpen(false);
+            }}
+            message={message}
+            key={'bottomright'}
+            autoHideDuration={3000}
+        >
+            <Alert severity={severity}>{message}</Alert>
+        </Snackbar>
+    )
+}
 
-export default Alert;
+export default Alerta

@@ -5,11 +5,15 @@ import Cliente from "@/components/clientes/Cliente";
 import { AccountCircle, ExpandMore, Search } from "@mui/icons-material";
 import { Accordion, AccordionDetails, AccordionSummary, Autocomplete, Box, Card, CardContent, Grid, InputAdornment, Modal, Paper, TextField, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
+import Alerta from "@/components/Alerta";
 
 const clientes = () => {
   const [clientes, setClientes] = useState([]);
   const [open, setOpen] = useState(false);
   const [resultado, setResultado] = useState('');
+  const [alert, setAlert] = useState(false);
+  const [mensaje, setMensaje] = useState('');
+  const [severidad, setSeveridad] = useState('error');
   const columnas = [
     {
       field: 'name', headerName: 'Nombre', width: 250, cellClassName: '', renderCell: (cell) => (
@@ -36,6 +40,11 @@ const clientes = () => {
       setClientes(respuesta.data);
     }
   };
+  const handleAlert = (msj, severidad) => {
+    setMensaje(msj);
+    setSeveridad(severidad);
+    setAlert(true);
+  }
   // Obtener listado de clientes al abrir
   useEffect(() => {
     getClientes();
@@ -51,7 +60,10 @@ const clientes = () => {
         setOpen(true); // abrir modal de vista de cliente
       }
     }
-  }, [resultado])
+  }, [resultado]);
+  const handleClick = (cell) => {
+    setResultado(cell.row);
+  }
   const handleClose = () => {
     setOpen(false);
     setResultado('');
@@ -67,7 +79,7 @@ const clientes = () => {
     return (
       <Modal open={open} onClose={handleClose}>
         <Box sx={style}>
-          <Cliente cliente={resultado} refresh={getClientes} />
+          <Cliente cliente={resultado} refresh={getClientes} handleAlert={handleAlert} />
         </Box>
       </Modal>
     )
@@ -86,9 +98,10 @@ const clientes = () => {
             <Buscar data={clientes} onSelect={setResultado} />
           </Grid>
         </Grid>
-        <Tabla columns={columnas} data={clientes} />
+        <Tabla columns={columnas} data={clientes} onCellClick={(cell) => handleClick(cell)} />
       </Paper>
       <ModalCliente />
+      <Alerta message={mensaje} severity={severidad} open={alert} setOpen={setAlert} />
     </Box>
   );
 };
