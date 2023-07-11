@@ -12,7 +12,6 @@ Estadísticas de ventas por empleado o mayores ventas
 ### Modulo Clientes:
 - Listado de clientes registrados para el control de datos y servicios / ventas
 ### Modulo Ventas
-
 - Listado de ventas por fechas, con estadísticas resaltadas (ventas por día)
 ### Modulo Productos:
 - Control de inventario, registro y modificación de productos y sus datos.
