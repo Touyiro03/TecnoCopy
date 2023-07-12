@@ -3,7 +3,7 @@ import { Box, Button, Card, CardContent, CardHeader, Divider, Grid, TextField, T
 import React, { useState, useEffect } from 'react'
 import EditDelete from '../EditDelete'
 
-const Cliente = ({ cliente, refresh , handleAlert}) => {
+const Cliente = ({ cliente, refresh, handleAlert }) => {
     const [openEdit, setOpenEdit] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
 
@@ -22,7 +22,9 @@ const Cliente = ({ cliente, refresh , handleAlert}) => {
             refresh();
         }
         handleAlert(resultado.message, resultado.status);
-        setOpenEdit(false);
+        if (resultado.status == 'success') {
+            setOpenEdit(false);
+        }
 
     }
     return (

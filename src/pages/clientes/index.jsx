@@ -87,6 +87,7 @@ const clientes = () => {
 
   return (
     <Box>
+      <Alerta message={mensaje} severity={severidad} open={alert} setOpen={setAlert} />
       <Paper elevation={20} sx={{ p: 2, m: 2 }}>
         <Grid container sx={{ pb: 3 }}>
           <Grid item lg={4}>
@@ -101,7 +102,6 @@ const clientes = () => {
         <Tabla columns={columnas} data={clientes} onCellClick={(cell) => handleClick(cell)} />
       </Paper>
       <ModalCliente />
-      <Alerta message={mensaje} severity={severidad} open={alert} setOpen={setAlert} />
     </Box>
   );
 };
