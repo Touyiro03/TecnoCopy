@@ -79,7 +79,12 @@ const clientes = () => {
     return (
       <Modal open={open} onClose={handleClose}>
         <Box sx={style}>
-          <Cliente cliente={resultado} refresh={getClientes} handleAlert={handleAlert} />
+          <Cliente
+            cliente={resultado}
+            refresh={handleClose}
+            handleAlert={handleAlert}
+            setResultado={setResultado}
+          />
         </Box>
       </Modal>
     )
@@ -95,9 +100,9 @@ const clientes = () => {
           </Grid>
           <Grid item lg></Grid>
           {/* Barra de busqueda */}
-          <Grid lg={4} xs={12}>
+          {/* <Grid lg={4} xs={12}>
             <Buscar data={clientes} onSelect={setResultado} />
-          </Grid>
+          </Grid> */}
         </Grid>
         <Tabla columns={columnas} data={clientes} onCellClick={(cell) => handleClick(cell)} />
       </Paper>

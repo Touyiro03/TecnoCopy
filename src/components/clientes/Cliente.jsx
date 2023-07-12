@@ -3,9 +3,10 @@ import { Box, Button, Card, CardContent, CardHeader, Divider, Grid, TextField, T
 import React, { useState, useEffect } from 'react'
 import EditDelete from '../EditDelete'
 
-const Cliente = ({ cliente, refresh, handleAlert }) => {
+const Cliente = ({ cliente, refresh, handleAlert, setResultado }) => {
     const [openEdit, setOpenEdit] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
+    const [datos, setDatos] = useState(cliente);
 
     const guardarCliente = async (e) => {
         e.preventDefault();
@@ -19,41 +20,57 @@ const Cliente = ({ cliente, refresh, handleAlert }) => {
         const res = await fetch(`/api/clientes`, { method: 'PUT', body: JSON.stringify(datosNuevos) });
         const resultado = await res.json();
         if (resultado.status === 'success') {
-            refresh();
-        }
-        handleAlert(resultado.message, resultado.status);
-        if (resultado.status == 'success') {
+            // mostrar datos nuevos en el modal
+            setDatos(datosNuevos);
+            setResultado(datosNuevos);
             setOpenEdit(false);
         }
+        handleAlert(resultado.message, resultado.status);
+    }
 
+    const handleDelete = async (e) => {
+        e.preventDefault();
+        var datos = { id_cliente: cliente._id };
+        const res = await fetch(`/api/clientes`, { method: 'DELETE', body: JSON.stringify(datos) });
+        const resultado = await res.json();
+        if (resultado.status == 'success') {
+            setOpenDelete(false);
+            console.log(resultado.data);
+        }
+        handleAlert(resultado.message, resultado.status);
     }
     return (
         <Card>
             <CardHeader title={
-                <Tooltip sx={{ display: 'flex', justifyContent: 'center' }} title={`${cliente.name}`} placement='top' arrow>
-                    <Typography noWrap variant='h5'>{openEdit && !openDelete ? 'Editar detalles de' : !openEdit && openDelete ? 'Eliminar cliente:' : 'Detalles de'} {cliente.name}</Typography>
+                <Tooltip sx={{ display: 'flex', justifyContent: 'center' }} title={`${datos.name}`} placement='top' arrow>
+                    <Typography
+                        noWrap
+                        variant='h5'
+                    >
+                        {openEdit && !openDelete ? 'Editar detalles de' : !openEdit && openDelete ? 'Eliminar cliente:' : 'Detalles de'} {datos.name}
+                    </Typography>
                 </Tooltip>
             } />
             <Divider />
 
-            {/* Vista de cliente */}
+            {/* Vista de datos */}
             {!openEdit && !openDelete &&
                 <CardContent>
                     <Grid container spacing={2}>
                         <Grid item xs={3}>Domicilio:</Grid>
-                        <Grid item xs={9}><Typography fontWeight='bold'>{cliente.address}</Typography></Grid>
+                        <Grid item xs={9}><Typography fontWeight='bold'>{datos.address}</Typography></Grid>
                         <Grid item xs={3}>Correo:</Grid>
-                        <Grid item xs={9}><Typography fontWeight='bold'>{cliente.email}</Typography></Grid>
+                        <Grid item xs={9}><Typography fontWeight='bold'>{datos.email}</Typography></Grid>
                         <Grid item xs={3}>RFC:</Grid>
-                        {cliente.rfc &&
-                            <Grid item xs={9}><Typography fontWeight='bold'>{cliente.rfc}</Typography></Grid>
+                        {datos.rfc &&
+                            <Grid item xs={9}><Typography fontWeight='bold'>{datos.rfc}</Typography></Grid>
                             ||
                             <Grid item xs={9}><Typography fontWeight='bold'>N/A                        </Typography></Grid>
                         }
                     </Grid>
                     <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
-                        {cliente.created_at &&
-                            <Typography variant='subtitle2' fontStyle='italic'>Cliente creado el {formatoFecha(cliente.created_at)}</Typography>
+                        {datos.created_at &&
+                            <Typography variant='subtitle2' fontStyle='italic'>Cliente creado el {formatoFecha(datos.created_at)}</Typography>
                         }
                     </Box>
                     <EditDelete openDelete={setOpenDelete} openEdit={setOpenEdit} />
@@ -66,22 +83,22 @@ const Cliente = ({ cliente, refresh, handleAlert }) => {
                     <Grid container component='form' onSubmit={guardarCliente} spacing={2}>
                         <Grid item xs={3}>Nombre:</Grid>
                         <Grid item xs={9}>
-                            <TextField name='name' defaultValue={cliente.name ?? ''} />
+                            <TextField name='name' defaultValue={datos.name ?? ''} />
                         </Grid>
 
                         <Grid item xs={3}>Domicilio:</Grid>
                         <Grid item xs={9}>
-                            <TextField name='address' defaultValue={cliente.address ?? ''} />
+                            <TextField name='address' defaultValue={datos.address ?? ''} />
                         </Grid>
 
                         <Grid item xs={3}>Correo:</Grid>
                         <Grid item xs={9}>
-                            <TextField name='email' defaultValue={cliente.email ?? ''} />
+                            <TextField name='email' defaultValue={datos.email ?? ''} />
                         </Grid>
 
                         <Grid item xs={3}>RFC:</Grid>
                         <Grid item xs={9}>
-                            <TextField name='rfc' defaultValue={cliente.rfc ?? ''} />
+                            <TextField name='rfc' defaultValue={datos.rfc ?? ''} />
                         </Grid>
                         <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
                             <Button onClick={() => { setOpenEdit(false) }} color='error' sx={{ mr: 2 }} >
@@ -93,6 +110,16 @@ const Cliente = ({ cliente, refresh, handleAlert }) => {
 
                         </Grid>
                     </Grid>
+                </CardContent>
+            }
+            {
+                openDelete &&
+                <CardContent>
+                    <Typography>¿Está seguro(a) de que desea eliminar este cliente? Esta acción es permanente</Typography>
+                    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <Button color='success' onClick={() => setOpenDelete(false)}>Cancelar</Button>
+                        <Button color='error' variant='contained' onClick={handleDelete}>Eliminar</Button>
+                    </Box>
                 </CardContent>
             }
         </Card>

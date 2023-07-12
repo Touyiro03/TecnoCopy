@@ -13,6 +13,6 @@ var clientPromise;
 // } else {
 // In production mode, it's best to not use a global variable.
 client = new MongoClient(uri);
-clientPromise = client.connect();
+clientPromise = await client.connect();
 // }
 export default clientPromise;

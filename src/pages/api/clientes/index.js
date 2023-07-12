@@ -2,8 +2,8 @@ import mongo from "@/lib/mongo";
 const { ObjectId } = require('mongodb');
 
 export default async function handleClientesApi(req, res) {
-  const conn = await mongo;
-  const db = await conn.db();
+  //const conn = await mongo;
+  const db = await mongo.db();
   const clientes = await db.collection('clientes');
   switch (req.method) {
     case "GET":
@@ -12,32 +12,21 @@ export default async function handleClientesApi(req, res) {
         // if (req.query.search) {
         //   clientes = await db.collection("clientes").find({ "$or": [{ "name": /req.query.search/ }, { "email": /req.query.search/ }] }).toArray();
         // } else {
-        data = await db.collection("clientes").find({}).toArray();
+        data = await clientes.find({}).toArray();
         // }
-        conn.close();
+        //conn.close();
         return res.status(200).json({ status: 'success', message: 'clientes encontrados', data: data });
 
       } catch (err) {
-        conn.
-          close();
+        //conn.close();
         return res.status(400).json({ status: 'error', message: err });
-      } finally {
-        // Increase the retry time value to 30 seconds.
-        await conn.on('error', (err) => {
-          if (err.message.includes('Topology was destroyed')) {
-            console.log('Topology was destroyed, retrying...');
-            setTimeout(() => {
-              conn.reconnect();
-            }, 30000);
-          }
-        });
       }
       break;
     case "POST":
       break;
     case "PUT":
-      const data = JSON.parse(req.body);
-      const id = ObjectId(data.id);
+      var data = JSON.parse(req.body);
+      var id = ObjectId(data.id);
       try {
         let cliente = await clientes.updateOne(
           {
@@ -63,9 +52,15 @@ export default async function handleClientesApi(req, res) {
 
       } catch (err) {
         return res.status(400).json({ status: 'error', message: err.message });
-      } finally {
-        await conn.close();
       }
       break;
+    case 'DELETE':
+      var data = JSON.parse(req.body);
+      try{
+        let deleted = await clientes.delete({_id: data.id_cliente});
+        return res.status(200).json({status: 'success', message: 'Cliente eliminado.', data: deleted});
+      }catch(err){
+        return res.status(400).json({ status: 'error', message: err.message });
+      }
   }
 }
