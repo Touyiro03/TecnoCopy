@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 
 const empleados = () => {
+  const [empleados, setEmpleados] = useState([]);
   const columnas = [
     {
       field: "user",
@@ -24,10 +25,10 @@ const empleados = () => {
   ];
   const [data, setData] = useState([]);
 
-  const getUsuarios = async () => {
+  const getEmpleados = async () => {
     const res = await fetch("/api/empleados");
     const resultado = await res.json();
-    if (resultado.status === "success") {
+    if (resultado.status == "success") {
       alert(resultado.message);
       setData(resultado.data);
     } else {
@@ -36,13 +37,13 @@ const empleados = () => {
   };
 
   useEffect(() => {
-    getUsuarios();
+    getEmpleados();
   }, []);
 
   
     return (
       <div>
-        <Tabla columns={columnas} data={data} />
+        <Tabla columns={columnas} data={empleados} onCellClick={(cell) => handleClick(cell)} />
       </div>
     );
 };
