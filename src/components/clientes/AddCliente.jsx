@@ -10,7 +10,7 @@ const AddCliente = ({ handleAlert, handleClose, setOpen }) => {
         if (cliente.name == '' || cliente.address == '' || cliente.email == '') {
             return handleAlert("Por favor, agregue los datos requeridos");
         }
-        const res = await fetch(`/api/clientes`, { method: 'POST', body: JSON.stringify(cliente) });
+        const res = await fetch(`https://tecno-copy.vercel.app/api/clientes`, { method: 'POST', body: JSON.stringify(cliente) });
         const respuesta = await res.json();
         handleAlert(respuesta.message, respuesta.status);
         handleClose();

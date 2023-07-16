@@ -26,7 +26,7 @@ const empleados = () => {
   const [data, setData] = useState([]);
 
   const getEmpleados = async () => {
-    const res = await fetch("/api/empleados");
+    const res = await fetch("https://tecno-copy.vercel.app/api/empleados");
     const resultado = await res.json();
     if (resultado.status == "success") {
       alert(resultado.message);
@@ -40,12 +40,12 @@ const empleados = () => {
     getEmpleados();
   }, []);
 
-  
-    return (
-      <div>
-        <Tabla columns={columnas} data={empleados} onCellClick={(cell) => handleClick(cell)} />
-      </div>
-    );
+
+  return (
+    <div>
+      <Tabla columns={columnas} data={empleados} onCellClick={(cell) => handleClick(cell)} />
+    </div>
+  );
 };
 
 export default empleados;

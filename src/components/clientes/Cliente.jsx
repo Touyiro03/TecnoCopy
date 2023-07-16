@@ -16,7 +16,7 @@ const Cliente = ({ cliente, refresh, handleAlert, setResultado }) => {
         };
 
         // llamada a la api con los nuevos datos del cliente
-        const res = await fetch(`/api/clientes`, { method: 'PUT', body: JSON.stringify(datosNuevos) });
+        const res = await fetch(`https://tecno-copy.vercel.app/api/clientes`, { method: 'PUT', body: JSON.stringify(datosNuevos) });
         const resultado = await res.json();
         if (resultado.status === 'success') {
             // mostrar datos nuevos en el modal
@@ -31,7 +31,7 @@ const Cliente = ({ cliente, refresh, handleAlert, setResultado }) => {
     const handleDelete = async (e) => {
         e.preventDefault();
         var datos = JSON.stringify({ id_cliente: cliente._id });
-        const res = await fetch(`/api/clientes?id=${cliente._id}`, { method: 'DELETE', body: datos });
+        const res = await fetch(`https://tecno-copy.vercel.app/api/clientes?id=${cliente._id}`, { method: 'DELETE', body: datos });
         const resultado = await res.json();
         if (resultado.status == 'success') {
             setOpenDelete(false);

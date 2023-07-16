@@ -9,7 +9,7 @@ import Alerta from "@/components/Alerta";
 import { SyncLoader } from 'react-spinners';
 import AddCliente from "@/components/clientes/AddCliente";
 import Head from "next/head";
-import { formatoFecha } from "@/lib/utils/date";
+import { fechaTabla, formatoFecha } from "@/lib/utils/date";
 const clientes = () => {
   const [clientes, setClientes] = useState([]);
   const [open, setOpen] = useState(false);
@@ -37,12 +37,20 @@ const clientes = () => {
       field: 'rfc', headerName: 'RFC', width: 150, cellClassName: ''
     },
     {
-      field: 'created_at', headerName: 'Creación'
+      field: 'created_at', headerName: 'Creación', width: 150,
+      valueFormatter: (cell) => {
+        //   if (cell.value.split('').includes('/')) {
+        //     return cell.value.split('/').reverse().join('-');
+        //   } else {
+        //     return cell.value;
+        //   }
+        return fechaTabla(cell.value);
+      }
     }
 
   ]
   const getClientes = async () => {
-    const res = await fetch("/api/clientes");
+    const res = await fetch("https://tecno-copy.vercel.app/api/clientes");
     const respuesta = await res.json();
     if (respuesta.status == 'success') {
       setClientes(respuesta.data);

@@ -9,3 +9,13 @@ export function formatoFecha(fechaObj) {
     }
     return fecha.toLocaleDateString("es-MX", opt);
 }
+
+export function fechaTabla(fechaObj) {
+    let fecha = new Date(fechaObj);
+    let opt = {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+    }
+    return fecha.toLocaleDateString("es-MX", opt);
+}
