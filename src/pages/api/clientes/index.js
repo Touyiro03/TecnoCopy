@@ -12,7 +12,7 @@ export default async function handleClientesApi(req, res) {
         // if (req.query.search) {
         //   clientes = await db.collection("clientes").find({ "$or": [{ "name": /req.query.search/ }, { "email": /req.query.search/ }] }).toArray();
         // } else {
-        data = await clientes.find({}).toArray();
+        data = await clientes.find({}).sort({ created_at: -1 }).toArray();
         // }
         //conn.close();
         return res.status(200).json({ status: 'success', message: 'clientes encontrados', data: data });
@@ -23,6 +23,15 @@ export default async function handleClientesApi(req, res) {
       }
       break;
     case "POST":
+      var data = JSON.parse(req.body);
+      try {
+        var cliente = await clientes.insertOne({ ...data, created_at: new Date() });
+        if (cliente.insertedCount > 0) {
+          return res.json({ status: 'success', message: 'Cliente creado exitosamente.' });
+        }
+      } catch (err) {
+        return res.status(400).json({ status: 'error', message: err });
+      }
       break;
     case "PUT":
       var data = JSON.parse(req.body);
@@ -55,11 +64,11 @@ export default async function handleClientesApi(req, res) {
       }
       break;
     case 'DELETE':
-      var data = JSON.parse(req.body);
-      try{
-        let deleted = await clientes.delete({_id: data.id_cliente});
-        return res.status(200).json({status: 'success', message: 'Cliente eliminado.', data: deleted});
-      }catch(err){
+      var id_cliente = ObjectId(req.query.id);
+      try {
+        let deleted = await clientes.deleteOne({ _id: id_cliente });
+        return res.status(200).json({ status: 'success', message: 'Cliente eliminado.', data: deleted });
+      } catch (err) {
         return res.status(400).json({ status: 'error', message: err.message });
       }
   }

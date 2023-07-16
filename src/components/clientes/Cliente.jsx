@@ -7,7 +7,6 @@ const Cliente = ({ cliente, refresh, handleAlert, setResultado }) => {
     const [openEdit, setOpenEdit] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
     const [datos, setDatos] = useState(cliente);
-
     const guardarCliente = async (e) => {
         e.preventDefault();
         const form = new FormData(e.currentTarget);
@@ -26,18 +25,21 @@ const Cliente = ({ cliente, refresh, handleAlert, setResultado }) => {
             setOpenEdit(false);
         }
         handleAlert(resultado.message, resultado.status);
+        refresh();
     }
 
     const handleDelete = async (e) => {
         e.preventDefault();
-        var datos = { id_cliente: cliente._id };
-        const res = await fetch(`/api/clientes`, { method: 'DELETE', body: JSON.stringify(datos) });
+        var datos = JSON.stringify({ id_cliente: cliente._id });
+        const res = await fetch(`/api/clientes?id=${cliente._id}`, { method: 'DELETE', body: datos });
         const resultado = await res.json();
         if (resultado.status == 'success') {
             setOpenDelete(false);
             console.log(resultado.data);
         }
         handleAlert(resultado.message, resultado.status);
+        setOpenDelete(false);
+        refresh();
     }
     return (
         <Card>

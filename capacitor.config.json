@@ -1,0 +1,8 @@
+{
+  "appId": "com.tecnocopy.app",
+  "appName": "tecnocopy",
+  "webDir": "out",
+  "server": {
+    "androidScheme": "https"
+  }
+}
