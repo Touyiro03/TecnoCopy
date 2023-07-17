@@ -23,8 +23,12 @@ export default async function handleClientesApi(req, res) {
       }
       break;
     case "POST":
-      var data = JSON.parse(req.body);
       try {
+        var data = JSON.parse(req.body);
+        if (Object(data).hasOwn("address1")) {
+          let address = `${data.address1} | ${data.address2} | ${data.address3}`;
+          data.address = address;
+        }
         var cliente = await clientes.insertOne({ ...data, created_at: new Date() });
         if (cliente.insertedCount > 0) {
           return res.json({ status: 'success', message: 'Cliente creado exitosamente.' });
@@ -34,9 +38,9 @@ export default async function handleClientesApi(req, res) {
       }
       break;
     case "PUT":
-      var data = JSON.parse(req.body);
-      var id = ObjectId(data.id);
       try {
+        var data = JSON.parse(req.body);
+        var id = ObjectId(data.id);
         let cliente = await clientes.updateOne(
           {
             _id: id
@@ -71,5 +75,6 @@ export default async function handleClientesApi(req, res) {
       } catch (err) {
         return res.status(400).json({ status: 'error', message: err.message });
       }
+      break;
   }
 }

@@ -1,14 +1,29 @@
+import Alerta from "@/components/Alerta";
+import Loader from "@/components/Loader";
 import Tabla from "@/components/Tabla";
+import AddEmpleado from "@/components/empleados/AddEmpleado";
+import Empleado from "@/components/empleados/Empleado";
+import { Box, Button, Modal, Paper, Typography } from "@mui/material";
+import { getSession } from "next-auth/react";
+import Head from "next/head";
 import React, { useState } from "react";
 import { useEffect } from "react";
 
 const empleados = () => {
+  const [sesion, setSesion] = useState(null);
   const [empleados, setEmpleados] = useState([]);
+  const [alert, setAlert] = useState(false);
+  const [openAdd, setOpenAdd] = useState(false);
+  const [mensaje, setMensaje] = useState('');
+  const [severidad, setSeveridad] = useState('error');
+  const [cargando, setCargando] = useState(true);
+  const [seleccion, setSeleccion] = useState(null);
+  const [openEmpleado, setOpenEmpleado] = useState(false);
   const columnas = [
     {
-      field: "user",
+      field: "name",
       headerName: "Nombre",
-      width: 250,
+      flex: 1,
     },
     {
       field: "email",
@@ -22,29 +37,74 @@ const empleados = () => {
       width: 150,
       cellClassName: "",
     },
+    {
+      field: "ultima_hora_entrada", // Este dato seria traido del checador de entrada
+      headerName: "Hora de entrada",
+      flex: 1,
+    }
   ];
-  const [data, setData] = useState([]);
-
+  const handleAlert = (msj, severidad) => {
+    setMensaje(msj);
+    setSeveridad(severidad);
+    setAlert(true);
+  }
   const getEmpleados = async () => {
-    const res = await fetch("https://tecno-copy.vercel.app/api/empleados");
+    const res = await fetch(process.env.NODE_ENV != 'development' ? "https://tecno-copy.vercel.app/api/empleados" : "/api/empleados");
     const resultado = await res.json();
     if (resultado.status == "success") {
-      alert(resultado.message);
-      setData(resultado.data);
-    } else {
-      alert(resultado.message);
+      setEmpleados(resultado.data);
+      setCargando(false);
     }
   };
 
   useEffect(() => {
-    getEmpleados();
+    const inicio = async () => {
+      setSesion(await getSession());
+      getEmpleados();
+    }
+    inicio();
   }, []);
+  const refresh = () => {
+    setCargando(true);
+    getEmpleados();
+    setOpenAdd(false);
+    setOpenEmpleado(false);
+  }
 
+  const handleClick = (cell) => {
+    if (cell.row._id && cell.row.name) {
+      setSeleccion(cell.row);
+      setOpenEmpleado(true);
+    }
+  }
 
   return (
-    <div>
-      <Tabla columns={columnas} data={empleados} onCellClick={(cell) => handleClick(cell)} />
-    </div>
+    <Box>
+      <Head>
+        <title>TecnoCopy - Clientes</title>
+      </Head>
+      <Alerta message={mensaje} severity={severidad} open={alert} setOpen={setAlert} />
+      {!cargando ?
+        <Paper elevation={4} sx={{ p: 2, m: 2 }}>
+          <Typography variant="h5" width={"33%"}>
+            Empleados
+          </Typography>
+          <Tabla columns={columnas} data={empleados} onCellClick={(cell) => handleClick(cell)}
+            toolbar={
+              <Button variant='outlined' onClick={() => setOpenAdd(true)} sx={{ width: { xs: '100%', lg: '15%' } }}>Agregar empleado</Button>
+            }
+          />
+          <Modal open={openAdd} onClose={() => setOpenAdd(false)} sx={{ overflowY: 'scroll' }}>
+            <AddEmpleado sesion={sesion} handleAlert={handleAlert} handleClose={refresh} setOpen={() => setOpenAdd(false)} />
+          </Modal>
+          <Modal open={openEmpleado} onClose={() => setOpenEmpleado(false)} sx={{ overflowY: 'scroll' }} >
+            <Empleado empleado={seleccion} handleAlert={handleAlert} handleClose={refresh} setOpen={() => setOpenEmpleado(false)} />
+          </Modal>
+        </Paper>
+        :
+        <Loader />
+      }
+    </Box>
   );
 };
 

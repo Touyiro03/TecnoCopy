@@ -7,7 +7,7 @@ const AddCliente = ({ handleAlert, handleClose, setOpen }) => {
         e.preventDefault();
         const cliente = getFormData(e.currentTarget);
 
-        if (cliente.name == '' || cliente.address == '' || cliente.email == '') {
+        if (cliente.name == '' || cliente.email == '') {
             return handleAlert("Por favor, agregue los datos requeridos");
         }
         const res = await fetch(process.env.NODE_ENV != "development" ? `https://tecno-copy.vercel.app/api/clientes` : `/api/clientes`, { method: 'POST', body: JSON.stringify(cliente) });
@@ -31,15 +31,20 @@ const AddCliente = ({ handleAlert, handleClose, setOpen }) => {
             />
             <CardContent>
                 <Grid container spacing={3}>
-                    <Grid item lg={6} xs={12}>
+                    <Grid item lg={12} xs={12}>
                         <TextField name='name' label='Nombre' fullWidth required />
                     </Grid>
-                    <Grid item lg={6} xs={12}>
-                        <TextField name='address' label='Dirección' fullWidth required />
-                    </Grid>
-
-                    <Grid item lg={6} xs={12}>
+                    <Grid item lg={12} xs={12}>
                         <TextField name='email' label='Correo electrónico' fullWidth required />
+                    </Grid>
+                    <Grid item lg={6} xs={12}>
+                        <TextField name='address1' label='Calle' fullWidth />
+                    </Grid>
+                    <Grid item lg={6} xs={12}>
+                        <TextField name='address2' label='Colonia' fullWidth />
+                    </Grid>
+                    <Grid item lg={6} xs={12}>
+                        <TextField name='address3' label='Ciudad y Estado' fullWidth />
                     </Grid>
                     <Grid item lg={6} xs={12}>
                         <TextField name='rfc' label='RFC' fullWidth />

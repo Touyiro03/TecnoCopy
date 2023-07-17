@@ -16,6 +16,8 @@ export const authOptions = {
     providers: [
         CredentialsProvider({
             async authorize(credentials, req) {
+                console.log("cred");
+                console.log(credentials);
                 const mongo = await conn;
                 const db = mongo.db();
                 var user = await db.collection('users').find({
@@ -38,12 +40,22 @@ export const authOptions = {
     callbacks: {
         async jwt({ token, account }) {
             // Persist the OAuth access_token to the token right after signin
+            console.log("1.");
+            console.log(token);
+            console.log("2.");
+            console.log(account);
             if (account) {
                 token.accessToken = account.access_token
+                token.account = account;
             }
             return token
         },
         async session({ session, token }) {
+            console.log("3");
+            console.log(session);
+            console.log("4.");
+            console.log(token);
+
             return {
                 ...session,
                 ...token

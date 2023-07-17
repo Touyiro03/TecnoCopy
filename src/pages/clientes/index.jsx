@@ -3,10 +3,10 @@ import Cliente from "@/components/clientes/Cliente";
 import { Box, Button, Grid, Modal, Paper, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import Alerta from "@/components/Alerta";
-import { SyncLoader } from 'react-spinners';
 import AddCliente from "@/components/clientes/AddCliente";
 import Head from "next/head";
 import { fechaTabla, formatoFecha } from "@/lib/utils/date";
+import Loader from "@/components/Loader";
 const clientes = () => {
   const [clientes, setClientes] = useState([]);
   const [open, setOpen] = useState(false);
@@ -59,12 +59,10 @@ const clientes = () => {
     setSeveridad(severidad);
     setAlert(true);
   }
-  // Obtener listado de clientes al abrir
   useEffect(() => {
     getClientes();
   }, []);
 
-  // al elegir un cliente en la busqueda
   useEffect(() => {
     if (resultado && resultado._id) {
       setResultado(resultado);
@@ -116,15 +114,14 @@ const clientes = () => {
       <Head>
         <title>TecnoCopy - Clientes</title>
       </Head>
+
       <Alerta message={mensaje} severity={severidad} open={alert} setOpen={setAlert} />
+
       {!cargando ?
         <Paper elevation={4} sx={{ p: 2, m: 2 }}>
-          <Grid container sx={{}}>
-            <Grid item lg={4}>
-              <Typography variant="h5" width={"33%"}>Clientes</Typography>
-            </Grid>
-            <Grid item lg></Grid>
-          </Grid>
+          <Typography variant="h5" width={"33%"}>
+            Clientes
+          </Typography>
           <Tabla columns={columnas} data={clientes} onCellClick={(cell) => handleClick(cell)}
             toolbar={
               <Button variant='outlined' onClick={() => setOpenAdd(true)} sx={{ width: { xs: '100%', lg: '15%' } }}>Agregar cliente</Button>
@@ -135,9 +132,7 @@ const clientes = () => {
           </Modal>
         </Paper>
         :
-        <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', my: 5 }}>
-          <SyncLoader loading={true} size={30} color="#32baff" aria-label="Loading Spinner" data-testid="loader" />
-        </Box>
+        <Loader />
       }
       <ModalCliente />
     </Box>
