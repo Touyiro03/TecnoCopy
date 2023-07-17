@@ -1,12 +1,35 @@
 import { Box, Button, Card, CardContent, CardHeader, Divider, Grid, TextField, Tooltip, Typography } from '@mui/material';
-import React from 'react'
+import React, { useState } from 'react'
+import EditDelete from '../EditDelete';
+import { formatoFecha } from '@/lib/utils/date';
+import { contenidoModal } from '@/lib/utils/styles';
 
 const Empleado = ({ empleado, refresh, handleAlert, setResultado }) => {
     const [openEdit, setOpenEdit] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
     const [datos, setDatos] = useState(empleado);
+    const handleEdit = async (e) => {
+        e.preventDefault();
+        const data = getFormData(e.currentTarget);
+        if (
+            data.name == '' ||
+            data.address1 == '' || data.address2 == '' ||
+            data.address3 == '' || data.email == ''
+        ) {
+            return handleAlert("Por favor, agregue los datos requeridos");
+        }
+        const res = await fetch(process.env.NODE_ENV != 'development' ? 'https://tecno-copy.vercel.app/api/empleados' : '/api/empleados', { method: 'PUT', body: JSON.stringify(data) })
+        const respuesta = await res.json();
+    }
+    const handleDelete = async (e) => {
+        e.preventDefault();
+        const res = await fetch(process.env.NODE_ENV != 'development' ? 'https://tecno-copy.vercel.app/api/empleados' : '/api/empleados', { method: 'DELETE', body: JSON.stringify(datos) })
+        const respuesta = await res.json();
+    }
     return (
-        <Card>
+        <Card sx={{
+            ...contenidoModal, width: { lg: '40%', xs: '80%' }, mx: 'auto', my: 5,
+        }}>
             <CardHeader title={
                 <Tooltip sx={{ display: 'flex', justifyContent: 'center' }} title={`${datos.name}`} placement='top' arrow>
                     <Typography
@@ -46,25 +69,30 @@ const Empleado = ({ empleado, refresh, handleAlert, setResultado }) => {
             {
                 openEdit &&
                 <CardContent>
-                    <Grid container component='form' onSubmit={guardarCliente} spacing={2}>
+                    <Grid container component='form' onSubmit={handleEdit} spacing={2} sx={{ mr: 2, alignItems: 'center' }}>
                         <Grid item xs={3}>Nombre:</Grid>
                         <Grid item xs={9}>
-                            <TextField name='name' defaultValue={datos.name ?? ''} />
+                            <TextField required fullWidth name='name' defaultValue={datos.name ?? ''} />
                         </Grid>
-
-                        <Grid item xs={3}>Domicilio:</Grid>
-                        <Grid item xs={9}>
-                            <TextField name='address' defaultValue={datos.address ?? ''} />
-                        </Grid>
-
                         <Grid item xs={3}>Correo:</Grid>
                         <Grid item xs={9}>
-                            <TextField name='email' defaultValue={datos.email ?? ''} />
+                            <TextField required fullWidth name='email' defaultValue={datos.email ?? ''} />
                         </Grid>
-
+                        <Grid item xs={3}>Calle:</Grid>
+                        <Grid item xs={9}>
+                            <TextField required fullWidth name='address1' defaultValue={datos.address.split('|')[0].trim() ?? ''} />
+                        </Grid>
+                        <Grid item xs={3}>Colonia:</Grid>
+                        <Grid item xs={9}>
+                            <TextField required fullWidth name='address2' defaultValue={datos.address.split('|')[1].trim() ?? ''} />
+                        </Grid>
+                        <Grid item xs={3}>Ciudad y estado:</Grid>
+                        <Grid item xs={9}>
+                            <TextField required fullWidth name='address3' defaultValue={datos.address.split('|')[2].trim() ?? ''} />
+                        </Grid>
                         <Grid item xs={3}>RFC:</Grid>
                         <Grid item xs={9}>
-                            <TextField name='rfc' defaultValue={datos.rfc ?? ''} />
+                            <TextField fullWidth name='rfc' defaultValue={datos.rfc ?? ''} />
                         </Grid>
                         <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>
                             <Button onClick={() => { setOpenEdit(false) }} color='error' sx={{ mr: 2 }} >
@@ -81,7 +109,7 @@ const Empleado = ({ empleado, refresh, handleAlert, setResultado }) => {
             {
                 openDelete &&
                 <CardContent>
-                    <Typography>¿Está seguro(a) de que desea eliminar este cliente? Esta acción es permanente</Typography>
+                    <Typography>¿Está seguro(a) de que desea eliminar este empleado? Esta acción es permanente</Typography>
                     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                         <Button color='success' onClick={() => setOpenDelete(false)}>Cancelar</Button>
                         <Button color='error' variant='contained' onClick={handleDelete}>Eliminar</Button>

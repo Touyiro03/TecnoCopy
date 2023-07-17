@@ -41,6 +41,10 @@ export default async function handleClientesApi(req, res) {
       try {
         var data = JSON.parse(req.body);
         var id = ObjectId(data.id);
+        if (Object(data).hasOwn("address1")) {
+          let address = `${data.address1} | ${data.address2} | ${data.address3}`;
+          data.address = address;
+        }
         let cliente = await clientes.updateOne(
           {
             _id: id
@@ -50,7 +54,8 @@ export default async function handleClientesApi(req, res) {
               name: data.name,
               address: data.address,
               rfc: data.rfc,
-              email: data.email
+              email: data.email,
+              updated_at: new Date()
             }
           },
           {

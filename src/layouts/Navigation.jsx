@@ -7,7 +7,7 @@ import Link from 'next/link';
 
 
 const pages = ['clientes', 'empleados', 'productos', 'ventas', 'rentas', 'servicios'];
-const settings = ['Opciones', 'Cerrar Sesión'];
+const settings = ['Perfil', 'Cerrar Sesión'];
 
 const Navigation = () => {
     const router = useRouter();
@@ -31,6 +31,8 @@ const Navigation = () => {
         switch (e.target.textContent) {
             case 'Cerrar Sesión':
                 signOut({ callbackUrl: '/signin' });
+            case 'Perfil':
+                router.push('/perfil');
         }
         setAnchorElUser(null);
     }

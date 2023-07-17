@@ -23,6 +23,7 @@ export const authOptions = {
                 var user = await db.collection('users').find({
                     name: req.body.name
                 }).toArray();
+                //console.log(user[0]);
                 user = user[0];
                 if (user != '' && user != undefined) {
                     let conf = await compareHash(req.body.password, user.password)
@@ -32,33 +33,33 @@ export const authOptions = {
                     }
                 }
 
-                mongo.close();
+                //mongo.close();
                 throw new Error("Usuario o Contraseña Incorrectos.")
             }
         }),
     ],
     callbacks: {
-        async jwt({ token, account }) {
+        async jwt({ token, account, profile }) {
             // Persist the OAuth access_token to the token right after signin
-            console.log("1.");
-            console.log(token);
-            console.log("2.");
-            console.log(account);
             if (account) {
                 token.accessToken = account.access_token
                 token.account = account;
+                token.profile = profile;
             }
             return token
         },
         async session({ session, token }) {
-            console.log("3");
-            console.log(session);
-            console.log("4.");
-            console.log(token);
-
+            const mongo = await conn;
+            const db = mongo.db();
+            const user = await db.collection('users').findOne({
+                name: token.name
+            });
+            token.user = user;
+            token.user.password = '';
+            //console.log(token);
             return {
                 ...session,
-                ...token
+                ...token,
             };
         }
     },

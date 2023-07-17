@@ -6,11 +6,13 @@ import Empleado from "@/components/empleados/Empleado";
 import { Box, Button, Modal, Paper, Typography } from "@mui/material";
 import { getSession } from "next-auth/react";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useEffect } from "react";
 
 const empleados = () => {
   const [sesion, setSesion] = useState(null);
+  const router = useRouter();
   const [empleados, setEmpleados] = useState([]);
   const [alert, setAlert] = useState(false);
   const [openAdd, setOpenAdd] = useState(false);
@@ -64,6 +66,11 @@ const empleados = () => {
     }
     inicio();
   }, []);
+  useEffect(() => {
+    if (sesion != null && sesion.user.role != 'admin' && sesion.user.role != 'gerente' && sesion.user.role != 'supervisor') {
+      router.push('/');
+    }
+  }, [sesion])
   const refresh = () => {
     setCargando(true);
     getEmpleados();

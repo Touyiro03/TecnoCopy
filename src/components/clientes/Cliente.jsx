@@ -82,7 +82,7 @@ const Cliente = ({ cliente, refresh, handleAlert, setResultado }) => {
             {
                 openEdit &&
                 <CardContent sx={{ width: '100%' }}>
-                    <Grid container component='form' onSubmit={guardarCliente} spacing={2} sx={{ mr: 2 }}>
+                    <Grid container component='form' onSubmit={guardarCliente} spacing={2} sx={{ mr: 2, alignItems: 'center' }}>
                         <Grid item xs={3}>Nombre:</Grid>
                         <Grid item xs={9}>
                             <TextField fullWidth name='name' defaultValue={datos.name ?? ''} />
