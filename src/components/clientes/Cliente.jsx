@@ -60,7 +60,9 @@ const Cliente = ({ cliente, refresh, handleAlert, setResultado }) => {
                 <CardContent>
                     <Grid container spacing={2}>
                         <Grid item xs={3}>Domicilio:</Grid>
-                        <Grid item xs={9}><Typography fontWeight='bold' sx={{ textAlign: { xs: 'center', lg: 'start' } }}>{datos.address}</Typography></Grid>
+                        <Grid item xs={9}><Typography fontWeight='bold' sx={{ textAlign: { xs: 'center', lg: 'start' } }}>
+                            {datos.address.indexOf('|') ? datos.address.split(' |').join(' ').trim() : datos.address}
+                        </Typography></Grid>
                         <Grid item xs={3}>Correo:</Grid>
                         <Grid item xs={9}><Typography fontWeight='bold' sx={{ textAlign: { xs: 'center', lg: 'start' } }}>{datos.email}</Typography></Grid>
                         <Grid item xs={3}>RFC:</Grid>
@@ -88,9 +90,18 @@ const Cliente = ({ cliente, refresh, handleAlert, setResultado }) => {
                             <TextField fullWidth name='name' defaultValue={datos.name ?? ''} />
                         </Grid>
 
-                        <Grid item xs={3}>Domicilio:</Grid>
-                        <Grid item xs={9}>
-                            <TextField fullWidth name='address' defaultValue={datos.address ?? ''} />
+                        <Grid item xs={3}>Calle:</Grid>
+                        <Grid item lg={9} xs={9}>
+                            <TextField name='address1' defaultValue={datos.address.split(' |')[0].trim()} label='Calle' fullWidth />
+                        </Grid>
+                        <Grid item xs={3}>Colonia:</Grid>
+
+                        <Grid item lg={9} xs={9}>
+                            <TextField name='address2' defaultValue={datos.address.split(' |')[1].trim()} label='Colonia' fullWidth />
+                        </Grid>
+                        <Grid item xs={3}>Ciudad y Estado:</Grid>
+                        <Grid item lg={9} xs={9}>
+                            <TextField name='address3' defaultValue={datos.address.split(' |')[2].trim()} label='Ciudad y Estado' fullWidth />
                         </Grid>
 
                         <Grid item xs={3}>Correo:</Grid>
@@ -116,10 +127,11 @@ const Cliente = ({ cliente, refresh, handleAlert, setResultado }) => {
             }
             {
                 openDelete &&
-                <CardContent>
-                    <Typography>¿Está seguro(a) de que desea eliminar este cliente? Esta acción es permanente</Typography>
-                    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                        <Button color='success' onClick={() => setOpenDelete(false)}>Cancelar</Button>
+                <CardContent sx={{ mr: 3, ml: 3, my: 3 }}>
+                    <Typography textAlign='center'>¿Está seguro(a) de que desea eliminar este cliente? </Typography>
+                    <Typography textAlign='center'>Esta acción es permanente</Typography>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+                        <Button color='success' onClick={() => setOpenDelete(false)} sx={{ mr: 2, }}>Cancelar</Button>
                         <Button color='error' variant='contained' onClick={handleDelete}>Eliminar</Button>
                     </Box>
                 </CardContent>

@@ -1,17 +1,22 @@
 import { AppBar, Button, IconButton, Toolbar, Typography, Container, Menu, Avatar, Tooltip, MenuItem, Box } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu';
 import { useSession, signIn, signOut } from "next-auth/react"
-import React from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
 
-const pages = ['clientes', 'empleados', 'productos', 'ventas', 'rentas', 'servicios'];
 const settings = ['Perfil', 'Cerrar Sesión'];
 
 const Navigation = () => {
     const router = useRouter();
     const { data: session } = useSession();
+    const [pages, setPages] = useState(['clientes', 'empleados', 'productos', 'ventas', 'rentas', 'servicios']);
+    // if (session.user.role == 'empleado') {
+    if (session && session.user.role == 'empleado') {
+        console.log(session);
+        setPages(['clientes', 'productos', 'ventas', 'rentas', 'servicios']);
+    }
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -144,9 +149,6 @@ const Navigation = () => {
                                 open={Boolean(anchorElUser)}
                                 onClose={handleCloseUserMenu}
                             >
-                                <MenuItem key={session.user.name} onClick={menuUser}>
-                                    <Typography textAlign="center">{session.user.name} (perfil)</Typography>
-                                </MenuItem>
                                 {settings.map((setting) => (
                                     <MenuItem key={setting} onClick={menuUser}>
                                         <Typography textAlign="center">{setting}</Typography>

@@ -9,26 +9,20 @@ export default async function handleClientesApi(req, res) {
     case "GET":
       try {
         let data;
-        // if (req.query.search) {
-        //   clientes = await db.collection("clientes").find({ "$or": [{ "name": /req.query.search/ }, { "email": /req.query.search/ }] }).toArray();
-        // } else {
         data = await clientes.find({}).sort({ created_at: -1 }).toArray();
-        // }
-        //conn.close();
         return res.status(200).json({ status: 'success', message: 'clientes encontrados', data: data });
-
       } catch (err) {
-        //conn.close();
         return res.status(400).json({ status: 'error', message: err });
       }
       break;
     case "POST":
       try {
         var data = JSON.parse(req.body);
-        if (Object(data).hasOwn("address1")) {
-          let address = `${data.address1} | ${data.address2} | ${data.address3}`;
-          data.address = address;
-        }
+        let address = `${data.address1} | ${data.address2} | ${data.address3}`;
+        data.address = address;
+        delete data.address1;
+        delete data.address2;
+        delete data.address3;
         var cliente = await clientes.insertOne({ ...data, created_at: new Date() });
         if (cliente.insertedCount > 0) {
           return res.json({ status: 'success', message: 'Cliente creado exitosamente.' });
@@ -41,10 +35,11 @@ export default async function handleClientesApi(req, res) {
       try {
         var data = JSON.parse(req.body);
         var id = ObjectId(data.id);
-        if (Object(data).hasOwn("address1")) {
-          let address = `${data.address1} | ${data.address2} | ${data.address3}`;
-          data.address = address;
-        }
+        let address = `${data.address1} | ${data.address2} | ${data.address3}`;
+        data.address = address;
+        delete data.address1;
+        delete data.address2;
+        delete data.address3;
         let cliente = await clientes.updateOne(
           {
             _id: id

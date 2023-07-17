@@ -28,7 +28,11 @@ const clientes = () => {
       field: 'email', headerName: 'Correo', flex: 1, cellClassName: ''
     },
     {
-      field: 'address', headerName: 'Dirección', flex: 1, cellClassName: ''
+      field: 'address', headerName: 'Dirección', flex: 1, valueFormatter: (cell) => {
+        if (cell.value.indexOf('|')) {
+          return cell.value.split(' |').join(' ').trim();
+        }
+      }
     },
     {
       field: 'rfc', headerName: 'RFC', width: 150, cellClassName: ''

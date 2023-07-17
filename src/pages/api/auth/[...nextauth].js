@@ -28,7 +28,7 @@ export const authOptions = {
                 if (user != '' && user != undefined) {
                     let conf = await compareHash(req.body.password, user.password)
                     if (conf) {
-                        mongo.close();
+                        //mongo.close();
                         return user;
                     }
                 }
