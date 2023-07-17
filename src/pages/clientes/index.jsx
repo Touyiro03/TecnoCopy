@@ -50,7 +50,7 @@ const clientes = () => {
 
   ]
   const getClientes = async () => {
-    const res = await fetch("https://tecno-copy.vercel.app/api/clientes");
+    const res = await fetch(process.env.NODE_ENV != 'development' ? "https://tecno-copy.vercel.app/api/clientes" : "/api/clientes");
     const respuesta = await res.json();
     if (respuesta.status == 'success') {
       setClientes(respuesta.data);
