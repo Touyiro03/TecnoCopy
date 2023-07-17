@@ -1,9 +1,6 @@
-import Buscar from "@/components/Buscar";
-import EditDelete from "@/components/EditDelete";
 import Tabla from "@/components/Tabla";
 import Cliente from "@/components/clientes/Cliente";
-import { AccountCircle, ExpandMore, Search } from "@mui/icons-material";
-import { Accordion, AccordionDetails, AccordionSummary, Autocomplete, Box, Button, Card, CardContent, Grid, InputAdornment, Modal, Paper, TextField, Typography } from "@mui/material";
+import { Box, Button, Grid, Modal, Paper, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import Alerta from "@/components/Alerta";
 import { SyncLoader } from 'react-spinners';
@@ -102,7 +99,7 @@ const clientes = () => {
     };
     return (
       <Modal open={open} onClose={handleClose}>
-        <Box sx={style}>
+        <Box sx={{ ...style, width: { lg: '40%', xs: '90%' } }}>
           <Cliente
             cliente={resultado}
             refresh={refresh}
@@ -121,21 +118,16 @@ const clientes = () => {
       </Head>
       <Alerta message={mensaje} severity={severidad} open={alert} setOpen={setAlert} />
       {!cargando ?
-
         <Paper elevation={4} sx={{ p: 2, m: 2 }}>
           <Grid container sx={{}}>
             <Grid item lg={4}>
               <Typography variant="h5" width={"33%"}>Clientes</Typography>
             </Grid>
             <Grid item lg></Grid>
-            {/* Barra de busqueda */}
-            {/* <Grid lg={4} xs={12}>
-            <Buscar data={clientes} onSelect={setResultado} />
-          </Grid> */}
           </Grid>
           <Tabla columns={columnas} data={clientes} onCellClick={(cell) => handleClick(cell)}
             toolbar={
-              <Button variant='outlined' onClick={() => setOpenAdd(true)}>Agregar cliente</Button>
+              <Button variant='outlined' onClick={() => setOpenAdd(true)} sx={{ width: { xs: '100%', lg: '15%' } }}>Agregar cliente</Button>
             }
           />
           <Modal open={openAdd} onClose={() => setOpenAdd(false)}>

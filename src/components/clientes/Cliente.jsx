@@ -60,14 +60,14 @@ const Cliente = ({ cliente, refresh, handleAlert, setResultado }) => {
                 <CardContent>
                     <Grid container spacing={2}>
                         <Grid item xs={3}>Domicilio:</Grid>
-                        <Grid item xs={9}><Typography fontWeight='bold'>{datos.address}</Typography></Grid>
+                        <Grid item xs={9}><Typography fontWeight='bold' sx={{ textAlign: { xs: 'center', lg: 'start' } }}>{datos.address}</Typography></Grid>
                         <Grid item xs={3}>Correo:</Grid>
-                        <Grid item xs={9}><Typography fontWeight='bold'>{datos.email}</Typography></Grid>
+                        <Grid item xs={9}><Typography fontWeight='bold' sx={{ textAlign: { xs: 'center', lg: 'start' } }}>{datos.email}</Typography></Grid>
                         <Grid item xs={3}>RFC:</Grid>
                         {datos.rfc &&
-                            <Grid item xs={9}><Typography fontWeight='bold'>{datos.rfc}</Typography></Grid>
+                            <Grid item xs={9}><Typography fontWeight='bold' sx={{ textAlign: { xs: 'center', lg: 'start' } }}>{datos.rfc}</Typography></Grid>
                             ||
-                            <Grid item xs={9}><Typography fontWeight='bold'>N/A                        </Typography></Grid>
+                            <Grid item xs={9}><Typography fontWeight='bold' sx={{ textAlign: { xs: 'center', lg: 'start' } }}>N/A                        </Typography></Grid>
                         }
                     </Grid>
                     <Box sx={{ display: 'flex', justifyContent: 'center', my: 2 }}>

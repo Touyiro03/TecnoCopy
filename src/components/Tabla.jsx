@@ -18,7 +18,7 @@ const CustomDataGrid = ({ columns, data, onCellClick, toolbar }) => {
 
     return (
         <div>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', p: 1, my: 1 }} >
+            <Box sx={{ display: { lg: 'flex', xs: 'block' }, justifyContent: 'space-between', p: 1, my: 1 }} >
                 {toolbar}
                 <TextField
                     value={searchText}
@@ -28,7 +28,7 @@ const CustomDataGrid = ({ columns, data, onCellClick, toolbar }) => {
                         endAdornment: <Search />,
                     }}
                     onChange={handleSearch}
-                    sx={{ alignSelf: 'end' }}
+                    sx={{ alignSelf: 'end', width: { xs: '100%', lg: '30%' }, my: { xs: 2, lg: 0 } }}
                 />
             </Box>
             <Paper sx={{ p: 1, pt: 1 }}>

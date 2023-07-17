@@ -3,6 +3,7 @@
   "appName": "tecnocopy",
   "webDir": "out",
   "server": {
-    "androidScheme": "https"
+    "url": "https://tecno-copy.vercel.app",
+    "cleartext": true
   }
 }

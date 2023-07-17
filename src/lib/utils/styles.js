@@ -13,7 +13,8 @@ const contenidoModal = {
     '&:focus-visible': {
         borderColor: 'black',
         outline: '3px solid'
-    }
+    },
+    overflowY: 'scroll'
 };
 
 export { contenidoModal }
