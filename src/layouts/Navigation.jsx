@@ -11,12 +11,11 @@ const settings = ['Perfil', 'Cerrar Sesión'];
 const Navigation = () => {
     const router = useRouter();
     const { data: session } = useSession();
-    const [pages, setPages] = useState(['clientes', 'empleados', 'productos', 'ventas', 'rentas', 'servicios']);
+    const [pages, setPages] = useState(
+        session && session.user.role != 'empleado' ? ['clientes', 'empleados', 'productos', 'ventas', 'rentas', 'servicios'] : ['clientes', 'productos', 'ventas', 'rentas', 'servicios']
+    );
     // if (session.user.role == 'empleado') {
-    if (session && session.user.role == 'empleado') {
-        console.log(session);
-        setPages(['clientes', 'productos', 'ventas', 'rentas', 'servicios']);
-    }
+
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -43,8 +42,10 @@ const Navigation = () => {
     }
 
     if (session) {
+
         return (
             < AppBar position="static" enableColorOnDark={true} sx={{ backgroundColor: '#fff', borderBottom: 'solid 0.1px', borderColor: 'lightgray', boxShadow: 3 }}>
+
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
                         {/* Vista normal */}

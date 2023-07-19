@@ -64,7 +64,7 @@ export default async function handleEmpleadosapi(req, res) {
             upsert: true
           }
         );
-        if (cliente.modifiedCount === 1 || cliente.matchedCount === 1) {
+        if (cliente.modifiedCount === 1 || cliente.matchedCount === 1 || cliente.upsertedCount === 1) {
           return res.status(200).json({ status: 'success', message: 'Cliente actualizado correctamente' });
         } else {
           return res.status(400).json({ status: 'error', message: 'Error al acutalizar los datos del cliente' });

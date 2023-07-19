@@ -2,18 +2,21 @@ import CambioPass from '@/components/perfil/CambioPass'
 import { getFormData } from '@/lib/utils/getFormData';
 import { Box, Button, Card, CardContent, CardHeader, Grid, TextField, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
-
+import { useSession } from "next-auth/react"
 const index = () => {
+    const { data: session, status } = useSession()
+
     const [datos, setDatos] = useState(null);
     const handleEdit = async (e) => {
         e.preventDefault();
         var nuevos_datos = getFormData(e.currentTarget);
+        nuevos_datos._id = session.user._id;
         const res = await fetch(process.env.NODE_ENV != 'development' ? "https://tecno-copy.vercel.app/api/empleados" : "/api/empleados",
             { method: 'PUT', body: JSON.stringify(nuevos_datos) }
         );
         const respuesta = await res.json();
-
-        // api para editar empleado
+        console.log(respuesta.message);
+        // respuesta de api
     }
     // llamar a api para obtener datos del empleado
     const getDatos = async () => {
@@ -36,15 +39,11 @@ const index = () => {
                     <Grid item xs={12} lg={6}>
                         <Card sx={{ boxShadow: 3 }}>
                             <CardHeader title={
-                                <Typography variant='h5'>Editar perfil</Typography>
+                                <Typography variant='h5'>Editar perfil de {datos.name ?? ''}</Typography>
                             } />
 
-                            <CardContent component='form' onSubmit={handleEdit}>
+                            <CardContent>
                                 <Grid container component='form' onSubmit={handleEdit} spacing={2} sx={{ mr: 2, alignItems: 'center' }}>
-                                    <Grid item xs={3}>Nombre:</Grid>
-                                    <Grid item xs={9}>
-                                        <TextField required fullWidth name='name' defaultValue={datos.name ?? ''} />
-                                    </Grid>
                                     <Grid item xs={3}>Correo:</Grid>
                                     <Grid item xs={9}>
                                         <TextField required fullWidth name='email' defaultValue={datos.email ?? ''} />
