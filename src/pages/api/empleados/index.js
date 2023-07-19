@@ -47,13 +47,12 @@ export default async function handleEmpleadosapi(req, res) {
         var id = ObjectId(data.id);
         let address = `${data.address1} | ${data.address2} | ${data.address3}`;
         data.address = address;
-        let cliente = await users.updateOne(
+        let empleado = await users.updateOne(
           {
             _id: id
           },
           {
             $set: {
-              name: data.name,
               address: data.address,
               rfc: data.rfc,
               email: data.email,
@@ -62,17 +61,33 @@ export default async function handleEmpleadosapi(req, res) {
           },
           {
             upsert: true
-          }
+          } 
         );
-        if (cliente.modifiedCount === 1 || cliente.matchedCount === 1 || cliente.upsertedCount === 1) {
-          return res.status(200).json({ status: 'success', message: 'Cliente actualizado correctamente' });
+        if (empleado.modifiedCount === 1 || empleado.matchedCount === 1 || empleado.upsertedCount === 1) {
+          return res.status(200).json({ status: 'success', message: 'Empleado actualizado correctamente', data: empleado });
         } else {
-          return res.status(400).json({ status: 'error', message: 'Error al acutalizar los datos del cliente' });
+          return res.status(400).json({ status: 'error', message: 'Error al acutalizar los datos del empleado' });
         }
 
       } catch (err) {
         return res.status(400).json({ status: 'error', message: err.message });
       }
       break;
+    case 'DELETE':
+      try {
+
+        var id = ObjectId(req.query.id);
+        if (id) {
+          var empleado = await users.deleteOne({ _id: id });
+          if (empleado.deletedCount > 0) {
+            return res.json({ status: 'success', message: 'Empleado eliminado correctamente' });
+          } else {
+            return res.json({ status: 'success', message: 'empleado', data: empleado });
+          }
+        }
+
+      } catch (err) {
+        return res.json({ message: err.message, status: 'error' });
+      }
   }
 }

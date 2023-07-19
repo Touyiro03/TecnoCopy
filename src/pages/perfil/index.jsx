@@ -7,6 +7,7 @@ const index = () => {
     const { data: session, status } = useSession()
 
     const [datos, setDatos] = useState(null);
+
     const handleEdit = async (e) => {
         e.preventDefault();
         var nuevos_datos = getFormData(e.currentTarget);

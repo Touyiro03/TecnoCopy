@@ -105,7 +105,7 @@ const empleados = () => {
             <AddEmpleado sesion={sesion} handleAlert={handleAlert} handleClose={refresh} setOpen={() => setOpenAdd(false)} />
           </Modal>
           <Modal open={openEmpleado} onClose={() => setOpenEmpleado(false)} sx={{ overflowY: 'scroll' }} >
-            <Empleado empleado={seleccion} handleAlert={handleAlert} handleClose={refresh} setOpen={() => setOpenEmpleado(false)} />
+            <Empleado empleado={seleccion} handleAlert={handleAlert} refresh={refresh} setOpen={() => setOpenEmpleado(false)} />
           </Modal>
         </Paper>
         :

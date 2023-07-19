@@ -2,6 +2,7 @@ import { formatoFecha } from '@/lib/utils/date'
 import { Box, Button, Card, CardContent, CardHeader, Divider, Grid, TextField, Tooltip, Typography } from '@mui/material'
 import React, { useState, useEffect } from 'react'
 import EditDelete from '../EditDelete'
+import { getFormData } from '@/lib/utils/getFormData'
 
 const Empleado = ({ empleado, refresh, handleAlert, setResultado }) => {
     const [openEdit, setOpenEdit] = useState(false);
@@ -9,19 +10,15 @@ const Empleado = ({ empleado, refresh, handleAlert, setResultado }) => {
     const [datos, setDatos] = useState(empleado);
     const guardarEmpleado = async (e) => {
         e.preventDefault();
-        const form = new FormData(e.currentTarget);
-        var datosNuevos = { id: empleado._id };
-        for (let key of form.keys()) {
-            datosNuevos = { ...datosNuevos, [key]: form.get(key) }
-        };
-
+        const form = new getFormData(e.currentTarget);
+        var datosNuevos = { id: empleado._id, ...form };
         // llamada a la api con los nuevos datos del empleado
         const res = await fetch(process.env.NODE_ENV != "development" ? `https://tecno-copy.vercel.app/api/empleados` : `/api/empleados`, { method: 'PUT', body: JSON.stringify(datosNuevos) });
         const resultado = await res.json();
         if (resultado.status === 'success') {
             // mostrar datos nuevos en el modal
-            setDatos(datosNuevos);
-            setResultado(datosNuevos);
+            setDatos({ ...datosNuevos, address: `${datosNuevos.address1} | ${datosNuevos.address2} | ${datosNuevos.address3}` });
+            //setResultado(datosNuevos);
             setOpenEdit(false);
         }
         handleAlert(resultado.message, resultado.status);
@@ -30,7 +27,7 @@ const Empleado = ({ empleado, refresh, handleAlert, setResultado }) => {
 
     const handleDelete = async (e) => {
         e.preventDefault();
-        var datos = JSON.stringify({ id_cliente: empleado._id });
+        var datos = JSON.stringify({ id_empleado: empleado._id });
         const res = await fetch(process.env.NODE_ENV != "development" ? `https://tecno-copy.vercel.app/api/empleados?id=${empleado._id}` : `/api/empleados?id=${empleado._id}`, { method: 'DELETE', body: datos });
         const resultado = await res.json();
         if (resultado.status == 'success') {
@@ -42,7 +39,7 @@ const Empleado = ({ empleado, refresh, handleAlert, setResultado }) => {
         refresh();
     }
     return (
-        <Card sx={{ mx: 'auto', width: { lg: '40%', xs: '90%' }, mtrequired: 5 }}>
+        <Card sx={{ mx: 'auto', width: { lg: '40%', xs: '90%' }, mt: 5 }}>
             <CardHeader title={
                 <Tooltip sx={{ display: 'flex', justifyContent: 'center' }} title={`${datos.name}`} placement='top' arrow>
                     <Typography
@@ -87,7 +84,13 @@ const Empleado = ({ empleado, refresh, handleAlert, setResultado }) => {
                     <Grid container component='form' onSubmit={guardarEmpleado} spacing={2} sx={{ mr: 2, alignItems: 'center' }}>
                         <Grid item xs={3}>Calle:</Grid>
                         <Grid item lg={9} xs={9}>
-                            <TextField name='address1' required defaultValue={datos.address.split(' |')[0].trim()} label='Calle' fullWidth />
+                            <TextField
+                                name='address1'
+                                required
+                                defaultValue={datos.address.split(' |')[0].trim()}
+                                label='Calle'
+                                fullWidth
+                            />
                         </Grid>
                         <Grid item xs={3}>Colonia:</Grid>
 
