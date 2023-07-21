@@ -1,55 +1,46 @@
 import mongo from "@/lib/mongo";
-const { ObjectId } = require("mongodb");
 import multer from 'multer';
-import { v4 as uuidv4 } from 'uuid';
 import path from 'path';
-
-const storage = multer.diskStorage({
-    destination: './public/productos/', // Directorio donde se guardarán las imágenes
-    filename: (req, file, cb) => {
-        const ext = path.extname(file.originalname);
-        const filename = `${uuidv4()}${ext}`;
-        cb(null, filename);
-    },
+var nombre = '';
+const upload = multer({
+    storage: multer.diskStorage({
+        destination: path.join(process.cwd(), 'public/productos'),
+        filename: (_, file, callback) => {
+            const extension = path.extname(file.originalname);
+            const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+            nombre = uniqueSuffix + extension;
+            callback(null, `${uniqueSuffix}${extension}`);
+        },
+    }),
 });
-
-const upload = multer({ storage });
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
-        return res.status(405).json({ message: 'Método no permitido' });
+        return res.status(405).json({ message: 'Method Not Allowed' });
     }
-    const db = await mongo.db();
-    const productos = await db.collection('productos');
-    upload.single('image')(req, res, async (err) => {
-        if (err) {
-            console.error('Error al subir la imagen:', err);
-            return res.status(500).json({ message: 'Error al subir la imagen' });
-        }
-        const { name, description, price, type, stock } = req.body;
-        const image = req.file.path.replace('public', '');
-        try {
-            const producto = {
-                name,
-                description,
-                price: parseFloat(price),
-                type,
-                stock: parseInt(stock),
-                image,
-            };
-            productos.insertOne(producto);
 
-            return res.status(200).json({
-                message: 'Producto guardado con éxito',
-                ...producto,
-            });
-        } catch (error) {
-            console.error('Error al guardar el producto:', error);
-            return res.status(500).json({ message: 'Error al guardar el producto' });
-        }
-
-
-    });
+    try {
+        upload.single('image')(req, res, async (err) => {
+            if (err) {
+                return res.status(400).json({ message: 'Error al subir la imagen.', status: 'error' });
+            }
+            const imagePath = req.file?.path;
+            const db = await mongo.db();
+            try {
+                const productos = await db.collection('productos');
+                const result = await productos.insertOne({ ...req.body, image: nombre });
+                console.log(result);
+                return res.status(200).json({ status: 'success', message: 'Producto guardado.', imagePath });
+            } catch (error) {
+                console.error(error);
+                return res.status(500).json({ message: 'Error al guardar el producto', status: 'error' });
+            } finally {
+                client.close();
+            }
+        });
+    } catch (error) {
+        return res.status(500).json({ message: 'Server Error' });
+    }
 }
 export const config = {
     api: {
