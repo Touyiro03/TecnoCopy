@@ -3,21 +3,31 @@ import { getFormData } from '@/lib/utils/getFormData';
 import { Box, Button, Card, CardContent, CardHeader, Grid, TextField, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useSession } from "next-auth/react"
+import Alerta from '@/components/Alerta';
+import Loader from '@/components/Loader';
 const index = () => {
     const { data: session, status } = useSession()
 
     const [datos, setDatos] = useState(null);
-
+    const [open, setOpen] = useState(false);
+    const [severity, setSeverity] = useState("error");
+    const [message, setMessage] = useState("");
     const handleEdit = async (e) => {
         e.preventDefault();
         var nuevos_datos = getFormData(e.currentTarget);
-        nuevos_datos._id = session.user._id;
+        nuevos_datos.id = session.user._id;
         const res = await fetch(process.env.NODE_ENV != 'development' ? "https://tecno-copy.vercel.app/api/empleados" : "/api/empleados",
             { method: 'PUT', body: JSON.stringify(nuevos_datos) }
         );
         const respuesta = await res.json();
         console.log(respuesta.message);
         // respuesta de api
+        handleAlert(respuesta.message, respuesta.status);
+        if (respuesta.status == "success") {
+            setDatos(null);
+            refresh();
+
+        }
     }
     // llamar a api para obtener datos del empleado
     const getDatos = async () => {
@@ -30,14 +40,23 @@ const index = () => {
     useEffect(() => {
         getDatos();
     }, [])
+    const handleAlert = (msj, severidad) => {
+        setMessage(msj);
+        setSeverity(severidad);
+        setOpen(true);
+    }
+    const refresh = async () => {
+        getDatos();
+    }
     return (
         <Box sx={{ m: 2 }}>
+            <Alerta open={open} setOpen={setOpen} severity={severity} message={message} />
             <Grid container spacing={3}>
                 <Grid item xs={12} lg={6}>
                     <CambioPass />
                 </Grid>
-                {datos &&
-                    <Grid item xs={12} lg={6}>
+                <Grid item xs={12} lg={6}>
+                    {datos &&
                         <Card sx={{ boxShadow: 3 }}>
                             <CardHeader title={
                                 <Typography variant='h5'>Editar perfil de {datos.name ?? ''}</Typography>
@@ -75,8 +94,10 @@ const index = () => {
                             </CardContent>
 
                         </Card>
-                    </Grid>
-                }
+                        ||
+                        <Loader />
+                    }
+                </Grid>
             </Grid >
         </Box>
     )

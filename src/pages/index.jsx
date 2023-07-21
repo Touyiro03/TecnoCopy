@@ -18,7 +18,7 @@ export default function Home() {
   const [datos, setDatos] = useState(null);
   useEffect(() => {
     const inicio = async () => {
-      const res = await fetch(process.env.NODE_ENV != 'development' ? 'https://tecno-copy.vercel.app/api/dashboard' : '/api/dashboard', { method: 'GET' })
+      const res = await fetch(process.env.NODE_ENV != 'development' ? 'https://tecno-copy.vercel.app/api/productos/subir' : '/api/productos/subir', { method: 'GET' })
       const resultado = await res.json();
       if (resultado.status === 'success') {
         setDatos(resultado.data);
